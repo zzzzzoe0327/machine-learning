@@ -44,9 +44,8 @@ class ImageFactory:
         self.set_image(imutils.rotate(self.__img, angle))
 
     def find_contour(self, seuil=75, auto_threshold=True, all_points=False, auto_canny=True):
-        # find contours (i.e., outlines) of the foreground objects in the
-        # thresholded image
-        # find contours and draw them in _img and return them as a list of tuples
+        # 尋找輪廓
+        # 如果使用自動閾值，則應用Canny邊緣檢測
         if auto_threshold:
             thresh = ImageFactory()
             thresh.set_image(self.get_image())
@@ -57,19 +56,17 @@ class ImageFactory:
             thresh.to_gray_scale()
             thresh.gaussian_blur()
             thresh.adaptive_treshold()
+
         screen_cnt = []
         if not all_points:
             cnts = cv2.findContours(thresh.get_image(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             cnts = imutils.grab_contours(cnts)
             cnts = sorted(cnts, key=cv2.contourArea, reverse=True)[:5]
             for c in cnts:
-                # Mo7iit
                 peri = cv2.arcLength(c, True)
-                # trouver le contour li kay dir chkl li baghin lwsst
                 approx = cv2.approxPolyDP(c, 0.02 * peri, True)
 
-                # if our approximated contour has four points, then we
-                # can assume that we have found our screen
+                # 如果我們的近似輪廓有四個點，那麼我們可以假設找到了屏幕
                 if len(approx) == 4:
                     screen_cnt = approx
                     break
@@ -77,10 +74,8 @@ class ImageFactory:
             screen_cnt = cv2.findContours(thresh.get_image(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
             screen_cnt = imutils.grab_contours(screen_cnt)
 
-        # loop over the contours
+        # 繪製輪廓
         for c in screen_cnt:
-            # draw each contour on the output image with a 3px thick purple
-            # outline, then display the output contours one at a time
             cv2.drawContours(self.__img, [c], -1, (240, 0, 159), 3)
 
         pts = [tuple(p[0]) for p in screen_cnt]
@@ -104,29 +99,20 @@ class ImageFactory:
 
     def scan(self):
         self.to_gray_scale()
-        # convert the warped image to grayscale, then threshold it
-        # to give it that 'black and white' paper effect
         t = threshold_local(self.__img, 11, offset=10, method="gaussian")
         warped = (self.__img > t).astype("uint8") * 255
         self.set_image(warped)
 
     def perspective_vue_from_4_points(self, points_list=None):
-        # load the notecard code image, clone it, and initialize the 4 points
-        # that correspond to the 4 corners of the notecard
+        # 應用四點變換以獲得"鳥瞰圖"
         if points_list is None:
-            pts = [(0, 0), (self.get_shape()[1], 0), (self.get_shape()[1], self.get_shape()[0]), (0,
-                                                                                                  self.get_shape()[0])]
+            pts = [(0, 0), (self.get_shape()[1], 0), (self.get_shape()[1], self.get_shape()[0]), (0, self.get_shape()[0])]
         else:
             pts = points_list
 
         pts = np.array(pts)
 
-        # loop over the points and draw them on the cloned image
-        """for (x, y) in pts:
-            cv2.circle(self.__img, (x, y), 5, (0, 255, 0), -1)"""
-
-        # apply the four point tranform to obtain a "birds eye view" of
-        # the notecard
+        # 應用四點變換以獲得"鳥瞰圖"
         self.set_image(imutils.perspective.four_point_transform(self.get_image(), pts))
 
     def find_skeleton(self):
