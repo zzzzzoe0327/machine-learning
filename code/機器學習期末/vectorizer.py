@@ -69,9 +69,9 @@ class Vectorizer:
     def get_custom_features(e):
         e = e.lower()
         return {
-            'f1': e[0],  # First letter
-            'f2': e[0:2],  # First 2 letters
-            'f3': e[0:3],  # First 3 letters
+            'f1': e[0],  # 第一個字母
+            'f2': e[0:2],  # 前兩個字母
+            'f3': e[0:3],  # 前三個字母
             'l1': e[-1],
             'l2': e[-2:],
             'l3': e[-3:],
@@ -108,8 +108,7 @@ class Vectorizer:
 
     @staticmethod
     def to_one_hot(vecteur_of_categories):
-        """converti une colone avec des categorie mais numerique en forme One Hot Encoding exemple versicolor
-        est de label 2 se transform en [0 0 1]"""
+        """將帶有數值的類別列轉換為 One Hot Encoding 的形式，例如 'versicolor' 的標籤 2 被轉換為 [0 0 1]"""
         return to_categorical(vecteur_of_categories)
 
     @staticmethod
@@ -134,4 +133,3 @@ def stemming(string_in):
     for p in tokens:
         new_tokens.append(stemmer.light_stem(p))
     return ''.join(new_tokens)
-
