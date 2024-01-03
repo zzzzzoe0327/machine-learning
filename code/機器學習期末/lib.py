@@ -7,6 +7,7 @@ from os.path import isfile, join
 import math
 
 def write_liste_csv(liste_ligne_csv, file_name='data/out.csv', delimiter=',', quotechar='`'):
+    # 將列表中的行寫入 CSV 檔案
     f = open(file_name, 'w+', newline='', encoding='utf-8')
     writer = csv.writer(f, delimiter=delimiter, quoting=csv.QUOTE_NONNUMERIC, quotechar=quotechar)
     for p in liste_ligne_csv:
@@ -14,16 +15,18 @@ def write_liste_csv(liste_ligne_csv, file_name='data/out.csv', delimiter=',', qu
     f.close()
 
 def save_object(o, object_path):
+    # 將物件序列化並儲存至檔案
     pickle.dump(o, open(object_path, 'wb'))
 
 def load_object(obj_path):
+    # 從檔案載入並還原序列化的物件
     return pickle.load(open(obj_path, 'rb'))
 
-# verify condition on all list elements all(map(is_arabic, city))
+# 驗證所有列表元素的條件 all(map(is_arabic, city))
 # nCk
 def c_n_k(n, k):
     """
-    A fast way to calculate binomial coefficients by Andrew Dalke (contrib).
+    使用 Andrew Dalke 提供的快速計算二項式係數的方法。
     """
     if 0 <= k <= n:
         ntok = 1
@@ -36,7 +39,7 @@ def c_n_k(n, k):
     else:
         return 0
 
-# factorielle
+# 階乘
 def factorial(x):
     x = int(x)
     result = 1
@@ -45,7 +48,7 @@ def factorial(x):
         x = x - 1
     return result
 
-# Fonction partie entière E()
+# 整數部分函數 E()
 def partie_entiere(x):
     if x == int(x):
         return x
@@ -54,7 +57,7 @@ def partie_entiere(x):
     else:
         return -partie_entiere(-x) - 1
 
-# Algorithme d'Euclide pour le pgcd
+# 歐幾里得算法求最大公因數
 def pgcd_iterative(a, b):
     while a % b != 0:
         a, b = b, a % b
@@ -66,11 +69,11 @@ def pgcd_recursive(a, b):
     else:
         return pgcd_recursive(b, a % b)
 
-# plus petit commun multiple
+# 最小公倍數
 def ppmc(a, b):
     return (a * b) / pgcd_recursive(a, b)
 
-# verifier premier
+# 判斷是否為質數
 def is_premier(n):
     if n == 0 or n == 1:
         return False
@@ -80,7 +83,7 @@ def is_premier(n):
                 return False
         return True
 
-# decomposition en nombre premier
+# 分解為質因數
 def decompsition_premier(n):
     liste = []
     if is_premier(n) or n == 1 or n == 0:
@@ -99,7 +102,7 @@ def decompsition_premier(n):
 
     return liste
 
-# from scipy.comb(), but MODIFIED!
+# 來自 scipy.comb()，但已修改
 def c_n_k_scipy(n, k):
     if (k > n) or (n < 0) or (k < 0):
         return 0
@@ -115,6 +118,7 @@ def c_n_k_scipy(n, k):
     return val
 
 def read_text_file(path, with_anti_slash=False):
+    # 讀取文本檔案
     f = open(path, "r+", encoding='utf-8')
     data = f.readlines()
     if not with_anti_slash:
@@ -123,6 +127,7 @@ def read_text_file(path, with_anti_slash=False):
     return data
 
 def write_liste_in_file(liste, path='data/out.txt'):
+    # 寫入列表至檔案
     f = open(path, 'w+', encoding='utf-8')
     liste = list(map(str, liste))
     for i in range(len(liste)-1):
@@ -133,6 +138,7 @@ def strip_and_split(string_in):
     return string_in.strip().split()
 
 def to_upper_file_text(path_source, path_destination):
+    # 將檔案中的文本轉換為大寫
     data = read_text_file(path_source)
     la = []
     for line in data:
@@ -140,6 +146,7 @@ def to_upper_file_text(path_source, path_destination):
     write_liste_in_file(path_destination, la)
 
 def write_line_in_file(line, path='data/latin_comments.csv', with_anti_slash=True):
+    # 將行寫入檔案
     f = open(path, "a+", encoding='utf-8')
 
     if with_anti_slash:
@@ -157,9 +164,11 @@ def list_to_string(liste):
     return "".join(liste_b)
 
 def check_all_elements_type(list_to_check, types_tuple):
+    # 檢查列表中所有元素的類型是否與指定的元組相符
     return all(isinstance(p, types_tuple) for p in list_to_check)
 
 def list_all_files_in_folder(folder_path):
+    # 列出資料夾中的所有檔案
     return [f for f in listdir(folder_path) if isfile(join(folder_path, f))]
 
 def get_mnist_as_dataframe():
@@ -173,11 +182,5 @@ def is_empty_line(string_in):
     return False
 
 def write_row_csv(row_liste, file_name='data/latin_comments.csv', delimiter=',', quotechar='`'):
-    file = open(file_name, 'a+', newline='', encoding='utf-8')
-    writer = csv.writer(file, delimiter=delimiter, quoting=csv.QUOTE_NONNUMERIC, quotechar=quotechar)
-    writer.writerow(row_liste)
-
-def read_csv(file_path, delimiter=','):
-    f = open(file_path, 'r+', encoding='utf-8')
-    reader = csv.reader(f, delimiter=delimiter)
-    return reader
+    # 將行寫入 CSV 檔案
+    file = open(file_name
